@@ -1,0 +1,48 @@
+/*******
+ * Read input from STDIN
+ * Use: console.log()  to output your result.
+ * Use: console.error() to output debug information into STDERR
+ * ***/
+
+var input = [];
+
+let myGrades = []; // entiers entre 0 et 10 inclus séparés par des espaces
+let nbFriends = null; // entier N compris entre 1 et 20 inclus
+let nbBestFriends = null; // entier K compris entre 1 et N inclus
+let friendsGrades = [];
+let currentLine = 0;
+let i = -1;
+
+readline_object.on("line", (input) => { //Read input values
+	++currentLine;
+  if (currentLine === 1)
+    myGrades = input.split(" ").map((nb) => parseInt(nb, 10));
+  else if (currentLine === 2) nbFriends = parseInt(input, 10);
+  else if (currentLine === 3) nbBestFriends = parseInt(input, 10);
+  else if (currentLine >= 4 && currentLine <= 4 + nbFriends) {
+    let grades = input.split(" ");
+    friendsGrades.push({
+      sumGaps: grades
+        .slice(0, 5)
+        .map((grade, index) => Math.abs(myGrades[index] - grade))
+        .reduce((a, b) => a + b),
+      lastMovieGrade: parseInt(grades.pop()),
+    });
+  }
+})
+//Call ContestResponse when all inputs are read
+readline_object.on("close", ContestResponse); 
+
+
+function ContestResponse() {
+  //implement your code here using input array
+
+  friendsGrades.sort((a, b) => a.sumGaps - b.sumGaps);
+   let myLastMovieGrade =
+    friendsGrades
+      .slice(0, nbBestFriends)
+      .map((grades) => grades.lastMovieGrade)
+      .reduce((a, b) => a + b) / nbBestFriends;
+
+  console.log(Math.trunc(myLastMovieGrade));
+}
